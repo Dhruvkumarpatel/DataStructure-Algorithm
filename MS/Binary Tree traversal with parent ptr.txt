@@ -1,0 +1,138 @@
+// "static void main" must be defined in a public class.
+public class Main {
+    public static void main(String[] args) {
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.left.parent = root;
+        root.left.left = new TreeNode(4);
+        root.left.left.parent = root.left;
+        root.left.right = new TreeNode(5);
+        root.left.right.parent = root.left;
+        root.right = new TreeNode(3);
+        root.right.parent = root;
+        root.right.right = new TreeNode(6);
+        root.right.right.parent = root.right;
+        
+        System.out.println("inorder :" +inorderTraversal(root));
+        System.out.println("postOrder :" +postOrderTraversal(root));
+        
+//         1
+//     2      3    
+// 4      5      6
+        
+        // inorder = 4 2 5 1 3 6
+        // postOrder = 4 5 2 6 3 1
+    }
+    
+    public static List<Integer> postOrderTraversal(TreeNode root)
+    {
+        final List<Integer> results = new ArrayList<>();
+        
+        if (root == null)
+        {
+            return results;
+        }
+        
+        if (root.left == null && root.right == null)
+        {
+            results.add(root.val);
+            return results;
+        }
+        
+        TreeNode current = root;
+        TreeNode lastVisited = null;
+        
+        while(current != null)
+        {
+            if (lastVisited != null && current.right == lastVisited)
+            {
+                results.add(current.val);
+                lastVisited = current;
+                current = current.parent;
+                continue;
+            }
+            
+            if (current.left != null && (lastVisited == null || current.left != lastVisited))
+            {
+                current = current.left;
+            }
+            else if (current.right != null && (lastVisited == null ||current.right != lastVisited))
+            {
+                current = current.right;
+            }
+            else
+            {
+                results.add(current.val);
+                lastVisited = current;
+                current = current.parent;
+            }
+        }
+        
+        return results;
+    }
+    
+    
+     public static List<Integer> inorderTraversal(TreeNode root) {
+        
+        final List<Integer> results = new ArrayList<>();
+        
+        if (root == null)
+        {
+            return results;
+        }
+        
+        if (root.left == null && root.right == null)
+        {
+            results.add(root.val);
+            return results;
+        }
+         
+        TreeNode current = root;
+        TreeNode temp = current;
+        
+        while(current != null)
+        {
+            if (temp != null && current.right == temp)
+            {
+                temp = current;
+                current = current.parent;
+                continue;
+            }
+            
+            if (current.left != null && temp != null && current.left != temp)
+            {
+                current = current.left;
+            }
+            else
+            {
+                results.add(current.val);
+                
+                if (current.right == null || (temp != null && current.right == temp))
+                {
+                    temp = current;
+                    current = current.parent;
+                }
+                else
+                {
+                    current = current.right;
+                }
+            }
+        }
+        
+        return results;
+    }
+    
+}
+
+class TreeNode 
+{
+    int val;
+    TreeNode left;
+    TreeNode right;
+    TreeNode parent;
+    
+    TreeNode(int val)
+    {
+        this.val = val;
+    }
+}
